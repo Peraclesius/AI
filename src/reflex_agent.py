@@ -67,50 +67,52 @@ if there is no dirt we know that we hit a wall and didn't move. mark as wall
 # Track visited locations and detected walls
 visited = {}
 location = (0, 0)  # Start unknown
-
-
+walls = {}
+wallCheck = False
+past_location = (0, 0)
 def state_agent(percept):
-    global location, visited
+    global visited, location, walls, wallCheck, past_location
 
-    # If this location is new, mark it as visited
-    if location not in visited:
-        visited[location] = True
-
-        # If there's dirt, clean it
     if percept:
         return 'clean'
 
-    # Check unexplored neighboring locations
-    possible_moves = []
-    for direction, offset in OFFSETS.items():
-        new_x, new_y = location[0] + offset[0], location[1] + offset[1]
+    if wallCheck:
+        wallCheck = False
+        location = past_location
 
-        if (new_x, new_y) not in visited:
+
+    possible_moves = []
+    possible_NonWallsMoves = []
+    for direction, offset in OFFSETS:
+        new_x, new_y = location[0] + offset[0], location[1] + offset[1]
+        possible_NonWallsMoves.append((direction, (new_x, new_y)))
+        if (new_x, new_y) not in visited and (new_x, new_y) not in walls:
             possible_moves.append((direction, (new_x, new_y)))
+        elif (new_x, new_y) in walls:
+            possible_NonWallsMoves.remove((direction, (new_x, new_y)))
+            wallCheck = True
 
     if possible_moves:
-        # Pick an unexplored move
-        move, new_location = random.choice(possible_moves)
+        past_location = location
+        move, location = random.choice(possible_moves)
+
     else:
-        # If all surrounding locations are explored, move randomly
-        move, new_location = random.choice(list(OFFSETS.items()))
-        new_location = (location[0] + new_location[0], location[1] + new_location[1])
+        move, location = random.choice(possible_NonWallsMoves)
 
-    # Attempt to move
-    location = new_location  # Update assumed location
-
-    # Mark new location as visited
-    visited[location] = True
     return move
+
+
+
+
+
 
 
 def state_agent_reset():
     global visited, location
     visited = {}
     location = (0, 0)
-
-
-
+    walls = {}
+    wallcheck = False
 
 
 run(20, 50000, state_agent)
