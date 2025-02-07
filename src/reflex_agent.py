@@ -112,6 +112,6 @@ def state_agent_reset():
 
 
 
-run(20, 50000, state_agent)
-# print(many_runs(20, 50000, 10, random_agent))
-# print(many_runs(20, 50000, 10, state_agent, state_agent_reset))
+# run(20, 50000, state_agent)
+print(many_runs(20, 50000, 10, random_agent))
+print(many_runs(20, 50000, 10, state_agent, state_agent_reset))
