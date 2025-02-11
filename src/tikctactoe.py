@@ -55,6 +55,35 @@ def max_value(state):
 
     return best_value
 
+def less(a, b):
+    return a > b
+
+def greater(a, b):
+    return a > b
+
+def value(state, player, better, bad):
+    """
+    Returns the value of state if it is player's turn.
+    :param better: takes two values and returns True if the first is better
+    :param bad: a value worse than anything we will see.
+    """
+    if winner(state) != 0:
+        return winner(state)
+    if not legal_moves(state):
+        return winner(state)
+    best_value = bad
+    for m in legal_moves(state):
+        s = successor(state, m, player)
+        if player =='X':
+            v = value(s, 'O', less, 2)
+        else:
+            v = value(s, 'X', greater, 2)
+
+        if better(v, best_value):
+            best_value = value
+
+    return best_value
+
 
 
 
