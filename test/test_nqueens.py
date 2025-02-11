@@ -1,5 +1,7 @@
 from nqueens import *
 
+
+
 def solves(solver, n):
     """
     Returns true if the function solver, when passed the number n, returns a legal solution to the n-queens puzzle.
@@ -23,6 +25,13 @@ def solves(solver, n):
 def test_queens_attacking():
     assert attacking((0, 0), (2, 2))
 
+state = [[1, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0]]
+def test_expands_second_row():
+    assert expand(state, 2, [(0, 0)]) == [(1, 2), (3, 2)]
+
 def test_3_queens():
     assert not nqueens(3)  # There is no solution
 
@@ -34,3 +43,4 @@ def test_8_queens():
 
 def test_20_queens():
     assert solves(nqueens, 20)
+
