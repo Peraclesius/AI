@@ -1,11 +1,25 @@
+# Elliot Mayer
 def nqueens(n):
-    pass
+    def solve(state: list[list[int]], col: int, queens: list[tuple[int, int]]):
+        if len(queens) == n:
+            return [q[0] for q in sorted(queens, key=lambda x: x[1])] # sort by the columns and just display row indices
+        elif col >= n:
+            return False
+
+        for move in expand(state, col, queens):
+            new_state = [row[:] for row in state]  # copy board
+            new_state[move[0]][move[1]] = 1  # place queen
+            result = solve(new_state, col + 1, queens + [move])
+            if result:
+                return result  # exit
+        return False
+
+    # Initialize empty board
+    initial_state = [[0] * n for _ in range(n)]
+    return solve(initial_state, 0, [])
 
 
-
-
-
-def expand(state: [list[list]], col: int, queens: list[tuple])-> list:
+def expand(state: list[list[int]], col: int, queens: list[tuple[int, int]])-> list:
     """
     :param state: board state, represented as a list of lists containing 1 for queens and 0 for empty spaces
     :param col: the col index that we want to expand
@@ -13,13 +27,7 @@ def expand(state: [list[list]], col: int, queens: list[tuple])-> list:
     :return: valid_moves
     """
     n = len(state)
-    # movements = [-1, 1] # up, down
-    # location =  (row, 0)
-    # new_location = None
     valid_moves = []
-    # if the selected row is all False, so initially
-    # if len(set(state[row][:])) != 1:
-    #     pass
 
     for row in range(n):
         new_location = (row, col)
@@ -34,11 +42,6 @@ def expand(state: [list[list]], col: int, queens: list[tuple])-> list:
             valid_moves.append(new_location)
 
     return valid_moves
-
-
-
-
-
 
 
 def attacking(queen1: tuple, queen2: tuple )-> bool:
